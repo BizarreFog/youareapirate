@@ -3,26 +3,67 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
+[RequireComponent(typeof(Rigidbody))]
 public class ShipController : MonoBehaviour
 {
 
-    public float bobHeight = .25f;
-    public float bobSpeed = .25f;
+    private Rigidbody rb;
 
-    private float originalYpos = 0;
+    public float shipSpeed = 3f;
+
+    public Vector3 lastPos;
+
+    public Vector3 lastMoved;
 
     void Start()
     {
-        originalYpos = this.transform.localPosition.y;
+        rb = GetComponent<Rigidbody>();
+
+        lastPos = transform.position;
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        ShipBobbing();
+       
+
+        Movement();
+
+      
     }
 
-    void ShipBobbing()
+    void Movement()
     {
-        this.transform.localPosition = new Vector3(this.transform.localPosition.x , Mathf.Sin(Time.time * bobSpeed) * bobHeight + originalYpos, this.transform.localPosition.z);
+        Debug.Log("WWEEE!!!");
+
+        //Vector3 currentPos = this.transform.position;
+
+        //transform.Translate(transform.forward * shipSpeed * Time.deltaTime);
+        lastMoved = transform.position - lastPos;
+        rb.AddForce(this.transform.forward.normalized * shipSpeed * Time.deltaTime);
+        lastPos = this.transform.position;
+
+        //HelperUtilities.WaitForFrameAndExecute();
+
+        //Physics.Simulate(1);
     }
+
+    void OnTriggerStay(Collider other)
+    {
+        if(other.tag != "Environment")
+        {
+            other.transform.SetParent(this.transform);
+
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+
+
+        if (other.tag != "Environment")
+        {
+            other.transform.SetParent(null);
+        }
+    }
+
 }

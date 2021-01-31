@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
         originalFOV = Camera.main.fieldOfView;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         Look();
         Gravity();
@@ -101,10 +101,36 @@ public class PlayerController : MonoBehaviour
         Vector3 move = (direction.x * transform.right + direction.y * transform.forward).normalized;
 
 
-
         pCon.Move((move + yVelocity) * currentSpeed * Time.deltaTime);
 
-        Jump();
+
+        if (this.transform.parent != null)
+        {
+            ShipController ship = this.transform.parent.GetComponent<ShipController>();
+
+            if(ship != null)
+            {
+                transform.position += ship.lastMoved;
+            }
+        }
+
+            /*
+            if(this.transform.parent != null)
+            {
+
+                //take parent and find out what displacement (parent - child)(gives you direction twoards parent) (distance with direction)
+                pCon.Move(((move + yVelocity) * currentSpeed * Time.deltaTime) + ( this.transform.parent.localPosition - this.transform.localPosition));
+
+                //inverse the displacement 
+
+            }
+            else
+            {
+                pCon.Move((move + yVelocity) * currentSpeed * Time.deltaTime);
+            }
+            */
+
+            Jump();
         Crouch();
         Sprint();
         LandingEffects();
