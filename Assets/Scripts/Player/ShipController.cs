@@ -117,7 +117,7 @@ public class ShipController : MonoBehaviour
         currentAnchorRaise = 0;
 
         anchorObject.transform.DOKill();
-        anchorObject.transform.DORotate(Vector3.zero, .5f, RotateMode.FastBeyond360);
+        anchorObject.transform.DORotate(Quaternion.identity.eulerAngles, .5f, RotateMode.FastBeyond360);
 
     }
 

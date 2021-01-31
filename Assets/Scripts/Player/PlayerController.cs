@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 yVelocity = Vector3.zero;
 
-    public bool canMove = true;
+    public bool hasGrav = true;
 
     public float jumpSpeed = 3;
     public float sprintSpeed = 6;
@@ -60,12 +60,12 @@ public class PlayerController : MonoBehaviour
     {
         Look();
 
-        if (canMove)
-        {
-            Movement();
-        }
+        Movement();
 
-        Gravity();
+        if (hasGrav)
+        {
+            Gravity();
+        }
     }
 
     private void Look()
@@ -254,5 +254,20 @@ public class PlayerController : MonoBehaviour
             isCrouching = false;
         }
 
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.GetComponent<Bitgem.VFX.StylisedWater.WaterVolumeBox>() != null)
+        {
+            hasGrav = false;
+        }
+    }
+    void OnTriggerExit(Collider other)
+    {
+        if (other.GetComponent<Bitgem.VFX.StylisedWater.WaterVolumeBox>() != null)
+        {
+            hasGrav = true;
+        }
     }
 }

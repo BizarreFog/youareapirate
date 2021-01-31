@@ -3,7 +3,22 @@ guid: 39d2705845d74ad4c9ea44508449ff37
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: CoconutMat
+    second: {fileID: 2100000, guid: 79282ea8549f37c49b60e8c8b4dd73e3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PalmLeavesMat
+    second: {fileID: 2100000, guid: 1de9ab53dd20f0e4a9b40a5d8b714bc0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PalmTreeMat
+    second: {fileID: 2100000, guid: 7d36794d28810784da9ebce0112db381, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
@@ -34,7 +49,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 150
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -81,7 +96,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 1
+    globalScale: 150
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
