@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
     private bool obstacleAbove;
     private bool sprinting = false;
 
+    public GameObject spawnPoint;
+
     private float timeSinceLastLand = 0;
 
     public float turnSmoothness = .25f;
@@ -62,9 +64,11 @@ public class PlayerController : MonoBehaviour
 
         Movement();
 
-        if (hasGrav)
+        Gravity();
+
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            Gravity();
+            this.transform.position = spawnPoint.transform.position;
         }
     }
 
