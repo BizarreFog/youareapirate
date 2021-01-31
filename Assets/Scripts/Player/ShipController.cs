@@ -13,14 +13,17 @@ public class ShipController : MonoBehaviour
 
     public float maxShipSpeed = 5f;
 
+    [HideInInspector]
     public Vector3 lastPos;
-
+    [HideInInspector]
     public Vector3 lastMoved;
 
     private Vector3 direction;
     private float turnAmount = 0f;
+
     [HideInInspector]
     public float currentTurn = 0f;
+
     public float turnSpeed = 15f;
     public float turnLerpFactor = 0.25f;
     public float sailLerpFactor = 0.25f;
@@ -30,7 +33,15 @@ public class ShipController : MonoBehaviour
     public float speedAmount = 0;
     private float currentSailLength = 0;
 
-    private bool anchorDropped = false;
+    public bool anchorDropped = false;
+    public Quaternion anchorRotation;
+    private Quaternion originalAnchorRot;
+    public bool raisingAnchor = false;
+
+    public float anchorRaiseTime = 5f;
+    private float currentAnchorRaise = 0f;
+
+    public GameObject anchorObject;
 
 
     void Start()
@@ -38,6 +49,16 @@ public class ShipController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         lastPos = transform.position;
+
+        shipSpeed = maxShipSpeed - 10;
+        speedAmount = maxShipSpeed - 10;
+        currentSailLength = (speedAmount / maxShipSpeed);
+
+        originalAnchorRot = anchorObject.transform.localRotation;
+
+        HandleSail();
+
+        DropAnchor();
     }
 
     void FixedUpdate()
@@ -50,22 +71,54 @@ public class ShipController : MonoBehaviour
 
     void Update()
     {
-        HandleSteering();
-        HandleSail();
         HandleAnchor();
     }
 
-    void DropAnchor()
+    public void DropAnchor()
     {
         anchorDropped = true;
+
+        anchorObject.transform.DOKill();
+        anchorObject.transform.DORotate(Vector3.zero, .5f, RotateMode.FastBeyond360);
     }
 
     void HandleAnchor()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+
+        if (currentAnchorRaise >= anchorRaiseTime)
         {
-            DropAnchor();
+            anchorDropped = false;
+            currentAnchorRaise = 0;
         }
+
+        if (raisingAnchor)
+        {
+            currentAnchorRaise += Time.deltaTime;
+
+            //anchorObject.transform.localRotation = Quaternion.Lerp(anchorObject.transform.localRotation, anchorRotation, .1f);
+
+            anchorObject.transform.DOKill();
+            anchorObject.transform.DORotate(new Vector3 (0, 700,0), anchorRaiseTime, RotateMode.FastBeyond360);
+        }
+        if (!anchorDropped)
+        {
+            anchorObject.transform.DOKill();
+        }
+
+        //if raising anchor lerp rotate to preset vector at slow time
+        //if anything else go back to original at very rapid rate
+
+    }
+
+    public void CancelAnchor()
+    {
+        raisingAnchor = false;
+        anchorDropped = true;
+        currentAnchorRaise = 0;
+
+        anchorObject.transform.DOKill();
+        anchorObject.transform.DORotate(Vector3.zero, .5f, RotateMode.FastBeyond360);
+
     }
 
     void Movement()
@@ -105,15 +158,15 @@ public class ShipController : MonoBehaviour
     public void HandleSail()
     {
 
-        speedAmount = Mathf.Clamp(speedAmount, 0, maxShipSpeed);
+        speedAmount = Mathf.Clamp(speedAmount, 10f, maxShipSpeed);
 
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            speedAmount--;
+            speedAmount -= 1000 * Time.deltaTime;
         }
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            speedAmount++;
+            speedAmount += 1000 * Time.deltaTime;
         }
 
         float speedPercent = (speedAmount / maxShipSpeed);

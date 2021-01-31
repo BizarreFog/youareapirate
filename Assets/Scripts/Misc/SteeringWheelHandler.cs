@@ -22,5 +22,23 @@ public class SteeringWheelHandler : MonoBehaviour
         debug.text = ship.currentTurn.ToString();
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.GetComponent<PlayerController>() != null)
+            GameUI.Instance.UpdateStatus("Press Left and Right to Steer");
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.GetComponent<PlayerController>() != null)
+            ship.HandleSteering();
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.GetComponent<PlayerController>() != null)
+            GameUI.Instance.ClearStatus();
+    }
+
 
 }
