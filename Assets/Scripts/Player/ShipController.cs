@@ -23,7 +23,14 @@ public class ShipController : MonoBehaviour
     public float currentTurn = 0f;
     public float turnSpeed = 15f;
     public float turnLerpFactor = 0.25f;
+    public float sailLerpFactor = 0.25f;
     public float dampingFactor = 1f;
+
+    public SkinnedMeshRenderer sail;
+    public float speedAmount = 0;
+    private float currentSailLength = 0;
+
+    private bool anchorDropped = false;
 
 
     void Start()
@@ -36,16 +43,29 @@ public class ShipController : MonoBehaviour
     void FixedUpdate()
     {
        
-
         Movement();
 
-      
     }
 
 
     void Update()
     {
         HandleSteering();
+        HandleSail();
+        HandleAnchor();
+    }
+
+    void DropAnchor()
+    {
+        anchorDropped = true;
+    }
+
+    void HandleAnchor()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            DropAnchor();
+        }
     }
 
     void Movement()
@@ -60,7 +80,11 @@ public class ShipController : MonoBehaviour
 
         direction = transform.up.normalized * turnAmount;
         lastMoved = transform.position - lastPos;
-        rb.AddForce(this.transform.forward.normalized * shipSpeed * Time.deltaTime);
+
+        if (!anchorDropped)
+        {
+            rb.AddForce(this.transform.forward.normalized * shipSpeed * Time.deltaTime);
+        }
         lastPos = this.transform.position;
 
         Quaternion q = Quaternion.AngleAxis((currentTurn / dampingFactor) * turnSpeed, transform.up) * transform.rotation;
@@ -76,6 +100,33 @@ public class ShipController : MonoBehaviour
         //HelperUtilities.WaitForFrameAndExecute();
 
         //Physics.Simulate(1);
+    }
+
+    public void HandleSail()
+    {
+
+        speedAmount = Mathf.Clamp(speedAmount, 0, maxShipSpeed);
+
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            speedAmount--;
+        }
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            speedAmount++;
+        }
+
+        float speedPercent = (speedAmount / maxShipSpeed);
+
+        Debug.Log(speedPercent);
+
+        currentSailLength = Mathf.Lerp(currentSailLength, speedPercent, sailLerpFactor);
+        currentSailLength = Mathf.Clamp(currentSailLength, 0, 1);
+
+        
+        shipSpeed = maxShipSpeed * Mathf.Abs(1 - speedPercent);
+
+        sail.SetBlendShapeWeight(0, speedPercent * 100);
     }
 
     public void HandleSteering()
@@ -96,18 +147,17 @@ public class ShipController : MonoBehaviour
         currentTurn = Mathf.Clamp(currentTurn, -270, 270);
     }
 
+
     void OnTriggerStay(Collider other)
     {
         if(other.tag != "Environment")
         {
             other.transform.SetParent(this.transform);
-
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-
 
         if (other.tag != "Environment")
         {

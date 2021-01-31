@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 yVelocity = Vector3.zero;
 
+    public bool canMove = true;
+
     public float jumpSpeed = 3;
     public float sprintSpeed = 6;
 
@@ -57,7 +59,12 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         Look();
-        Movement();
+
+        if (canMove)
+        {
+            Movement();
+        }
+
         Gravity();
     }
 
@@ -84,6 +91,10 @@ public class PlayerController : MonoBehaviour
 
     private void Movement()
     {
+
+
+        Jump();
+
         // Vector3 movement = new Vector3((Input.GetAxis("Horizontal") * currentSpeed) * Time.deltaTime, 0, (Input.GetAxis("Vertical") * currentSpeed) * Time.deltaTime);
         if (pCon.isGrounded)
         {
@@ -130,7 +141,6 @@ public class PlayerController : MonoBehaviour
             }
             */
 
-        Jump();
         Crouch();
         Sprint();
         LandingEffects();
