@@ -57,8 +57,8 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         Look();
-        Gravity();
         Movement();
+        Gravity();
     }
 
     private void Look()
@@ -130,7 +130,7 @@ public class PlayerController : MonoBehaviour
             }
             */
 
-            Jump();
+        Jump();
         Crouch();
         Sprint();
         LandingEffects();
@@ -142,7 +142,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             RaycastHit hit;
-            if ((Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, pCon.height / 2)))
+            if ((Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, pCon.height)))
             {
                 Debug.Log("hit");
                 yVelocity.y += Mathf.Sqrt(jumpSpeed * -3.0f * playerGravity);
