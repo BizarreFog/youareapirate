@@ -15,6 +15,7 @@ public class Chest : MonoBehaviour
         {
             GameManager.Instance.ChestFound(this);
             Destroy(this.gameObject);
+            AudioManager.instance.PlayFromPool("load");
         }
     }
 }

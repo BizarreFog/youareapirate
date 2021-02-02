@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class GameManager : SingletonMonoBehaviour<GameManager>
@@ -73,6 +74,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     void WinGame()
     {
         Debug.Log("You won buddy");
+        SceneManager.LoadScene("PrettyMeny");
     }
 
 }

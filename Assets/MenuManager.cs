@@ -8,7 +8,7 @@ public class MenuManager : MonoBehaviour
     // Start is called before the first frame update
     public void PlayGame()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("TomasShipTest 1");
     }
 
     public void QuitGame()
